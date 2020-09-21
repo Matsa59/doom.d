@@ -88,29 +88,20 @@
 
 (use-package! lsp-mode
   :commands lsp
+  :ensure t
+  :diminish lsp-mode
   :config
   (setq lsp-enable-file-watchers nil)
   :hook
-  (elixir-mode . lsp))
+  (elixir-mode . lsp)
+  :init
+  (add-to-list 'exec-path "~/elixir-ls/release/language_server.sh"))
 
+(defvar lsp-elixir--config-options (make-hash-table))
 
-(after! lsp-clients
-  (lsp-register-client
-   (make-lsp-client :new-connection
-    (lsp-stdio-connection
-        (expand-file-name
-          "~/elixir-ls/release/language_server.sh"))
-        :major-modes '(elixir-mode)
-        :priority -1
-        :server-id 'elixir-ls
-        :initialized-fn (lambda (workspace)
-            (with-lsp-workspace workspace
-             (let ((config `(:elixirLS
-                             (:mixEnv "dev"
-                                     :dialyzerEnabled
-                                     :json-false))))
-             (lsp--set-configuration config)))))))
-
+(add-hook 'lsp-after-initialize-hook
+          (lambda ()
+            (lsp--set-configuration `(:elixirLS, lsp-elixir--config-options))))
 
 
 (after! lsp-ui
