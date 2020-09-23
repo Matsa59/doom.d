@@ -56,54 +56,6 @@
 ;; projectile configuration
 (setq projectile-project-search-path '("~/Documents/Programmation/elixir/wapixir/" "~/Documents/Programmation/elixir"))
 
-
-(use-package! alchemist
-  :hook (elixir-mode . alchemist-mode)
-  :config
-  (set-lookup-handlers! 'elixir-mode
-    :definition #'alchemist-goto-definition-at-point
-    :documentation #'alchemist-help-search-at-point)
-  (set-eval-handler! 'elixir-mode #'alchemist-eval-region)
-  (set-repl-handler! 'elixir-mode #'alchemist-iex-project-run)
-  (setq alchemist-mix-env "dev")
-  (setq alchemist-hooks-compile-on-save t)
-  (map! :map elixir-mode-map :nv "m" alchemist-mode-keymap)
-  (setq lsp-enable-file-watchers nil))
-
-;; (use-package! rust-mode
-;;   :config
-;;   (setq rust-format-on-save t))
-
-;; (use-package! rustic
-;;   :config
-;;   (setq rustic-lsp-server 'rls)
-;;   (setq rustic-format-on-save t))
-
-;; (use-package! flycheck
-;;   :ensure t
-;;   :init (global-flycheck-mode))
-
-;; (with-eval-after-load 'rust-mode
-;;   (add-hook 'flycheck-mode-hook #'flycheck-rust-setup))
-
-(use-package! lsp-mode
-  :commands lsp
-  :ensure t
-  :diminish lsp-mode
-  :config
-  (setq lsp-enable-file-watchers nil)
-  :hook
-  (elixir-mode . lsp)
-  :init
-  (add-to-list 'exec-path "~/elixir-ls/release/language_server.sh"))
-
-(defvar lsp-elixir--config-options (make-hash-table))
-
-(add-hook 'lsp-after-initialize-hook
-          (lambda ()
-            (lsp--set-configuration `(:elixirLS, lsp-elixir--config-options))))
-
-
 (after! lsp-ui
   (setq lsp-ui-doc-max-height 13
         lsp-ui-doc-max-width 80
@@ -119,22 +71,12 @@
         company-lsp-match-candidate-predicate #'company-lsp-match-candidate-prefix
         ))
 
-;; web mode + beautify
-
-;(use-package! web-beautify
-;  :hook
-;  (web-mode . web-beautify))
-
 (use-package! web-mode
   :init
   (setq web-mode-markup-indent-offset 2)
   (add-to-list 'auto-mode-alist '("\\.html\\.eex\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.html\\.leex\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
-  ;(setq web-mode-engines-alist
-  ;      '(("erb" . "\\.html\\.eex\\'")
-  ;       ("erb" . "\\.html.leex\\'"))))
-
   )
 
 (eval-after-load 'web-mode
@@ -199,16 +141,11 @@
    ("C-p" . evil-multiedit-prev)))
 
 
-(use-package! multi-term
-  :config
-  (setq multi-term-program "/bin/zsh")
-  :bind
-  (:map evil-normal-state-map
-   ("s-!" . multi-term)))
-
 (load! "bindings")
 
 (load! "joseph-single-dired")
+
+(setq exec-path (append exec-path '("/Users/matsa/elixir-ls/release")))
 
 (when (or window-system (daemonp))
   (setq default-frame-alist '(
