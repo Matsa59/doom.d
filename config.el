@@ -22,11 +22,11 @@
 ;; font string. You generally only need these two:
 ;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
 ;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
-(setq doom-font (font-spec :family "Source Code Pro" :size 14 :weight 'semi-light))
+(setq doom-font (font-spec :family "Source Code Pro" :size 15 :weight 'semi-light))
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-one)
+;; (setq doom-theme 'doom-one)
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -56,20 +56,28 @@
 ;; projectile configuration
 (setq projectile-project-search-path '("~/Documents/Programmation/elixir/wapixir/" "~/Documents/Programmation/elixir"))
 
+;; reducing lags
 (after! lsp-ui
-  (setq lsp-ui-doc-max-height 13
-        lsp-ui-doc-max-width 80
-        lsp-ui-sideline-ignore-duplicate t
-        lsp-ui-doc-header t
-        lsp-ui-doc-include-signature t
-        lsp-ui-doc-position 'bottom
-        lsp-ui-doc-use-webkit nil
-        lsp-ui-flycheck-enable t
-        lsp-ui-imenu-kind-position 'left
-        lsp-ui-sideline-code-actions-prefix "💡"
-        ;; fix for completing candidates not showing after “Enum.”:
-        company-lsp-match-candidate-predicate #'company-lsp-match-candidate-prefix
-        ))
+  (setq lsp-ui-doc-enable nil
+        lsp-ui-sideline-enable nil))
+(setq auto-window-vscroll nil)
+
+(setq doom-modeline-enable-word-count nil)
+
+;; (after! lsp-ui
+;;   (setq lsp-ui-doc-max-height 13
+;;         lsp-ui-doc-max-width 80
+;;         lsp-ui-sideline-ignore-duplicate t
+;;         lsp-ui-doc-header t
+;;         lsp-ui-doc-include-signature t
+;;         lsp-ui-doc-position 'bottom
+;;         lsp-ui-doc-use-webkit nil
+;;         lsp-ui-flycheck-enable t
+;;         lsp-ui-imenu-kind-position 'left
+;;         lsp-ui-sideline-code-actions-prefix "💡"
+;;         ;; fix for completing candidates not showing after “Enum.”:
+;;         company-lsp-match-candidate-predicate #'company-lsp-match-candidate-prefix
+;;         ))
 
 (use-package! web-mode
   :init
@@ -82,6 +90,11 @@
 (eval-after-load 'web-mode
   '(add-hook 'web-mode-hook
              (lambda ()
+               (add-hook 'before-save-hook 'web-mode-buffer-indent t t))))
+
+(eval-after-load 'rjsx-mode
+  '(add-hook 'rjsx-mode-hook
+             (lambda()
                (add-hook 'before-save-hook 'web-mode-buffer-indent t t))))
 
 (setq auth-sources '("~/.authinfo"))
@@ -155,3 +168,5 @@
                               (left . 300)
  ))
 )
+
+(setq display-line-numbers-type nil)

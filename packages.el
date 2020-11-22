@@ -53,5 +53,5 @@
 (package! ag)
 (package! ripgrep)
 (package! helm-ag)
-(package! web-beautify)
+;; (package! web-beautify)
 (package! evil-multiedit)
