@@ -54,7 +54,7 @@
 ;; they are implemented.
 
 ;; projectile configuration
-(setq projectile-project-search-path '("~/Documents/Programmation/elixir/wapixir/" "~/Documents/Programmation/elixir"))
+(setq projectile-project-search-path '("~/Code/wapitea"))
 
 ;; reducing lags
 (after! lsp-ui
@@ -158,7 +158,7 @@
 
 (load! "joseph-single-dired")
 
-(setq exec-path (append exec-path '("/Users/matsa/elixir-ls/release")))
+(setq exec-path (append exec-path '("/Users/matsa/Code/elixir/elixir-ls/release")))
 
 (when (or window-system (daemonp))
   (setq default-frame-alist '(
