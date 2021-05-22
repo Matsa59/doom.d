@@ -49,9 +49,13 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
-(package! web-mode)
+(package! web-mode
+  :recipe (:host github :repo "Matsa59/web-mode"))
+
 (package! ag)
 (package! ripgrep)
 (package! helm-ag)
 ;; (package! web-beautify)
 (package! evil-multiedit)
+(package! prettier-js)
+(package! feature-mode)

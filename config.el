@@ -22,7 +22,7 @@
 ;; font string. You generally only need these two:
 ;; (setq doom-font (font-spec :family "monospace" :size 12 :weight 'semi-light)
 ;;       doom-variable-pitch-font (font-spec :family "sans" :size 13))
-(setq doom-font (font-spec :family "Source Code Pro" :size 15 :weight 'semi-light))
+(setq doom-font (font-spec :family "Hasklig" :size 15 :weight 'normal))
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
@@ -34,7 +34,7 @@
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type t)
+(setq display-line-numbers-type nil)
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
@@ -54,84 +54,42 @@
 ;; they are implemented.
 
 ;; projectile configuration
-(setq projectile-project-search-path '("~/Code/wapitea"))
+(setq projectile-project-search-path '("~/Code/drakkar"))
 
 ;; reducing lags
 (setq auto-window-vscroll nil)
 
-(after! lsp
-  (setq lsp-eldoc-render-all nil))
-
-(setq lsp-signature-render-documentation nil)
-
-(use-package! eglot
-  :config
-  (setq eglot-ignored-server-capabilites '(:documentHighlightProvider)))
-
 (setq doom-modeline-enable-word-count nil)
 
-;; (after! lsp-ui
-;;   (setq lsp-ui-doc-max-height 13
-;;         lsp-ui-doc-max-width 80
-;;         lsp-ui-sideline-ignore-duplicate t
-;;         lsp-ui-doc-header t
-;;         lsp-ui-doc-include-signature t
-;;         lsp-ui-doc-position 'bottom
-;;         lsp-ui-doc-use-webkit nil
-;;         lsp-ui-flycheck-enable t
-;;         lsp-ui-imenu-kind-position 'left
-;;         lsp-ui-sideline-code-actions-prefix "💡"
-;;         ;; fix for completing candidates not showing after “Enum.”:
-;;         company-lsp-match-candidate-predicate #'company-lsp-match-candidate-prefix
-;;         ))
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 2)
 
 (use-package! web-mode
   :init
   (setq web-mode-markup-indent-offset 2)
+  (setq web-mode-css-indent-offset 2)
+  (setq web-mode-code-indent-offset 2)
   (add-to-list 'auto-mode-alist '("\\.html\\.eex\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.js\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.scss\\'" . web-mode))
+  (add-to-list 'auto-mode-alist '("\\.css\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.html\\.leex\\'" . web-mode))
-  (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode))
-  )
+  (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode)))
 
 (eval-after-load 'web-mode
   '(add-hook 'web-mode-hook
              (lambda ()
-               (add-hook 'before-save-hook 'web-mode-buffer-indent t t))))
+               (add-hook 'before-save-hook 'web-mode-buffer-indent t t)
+               (setq js-indent-level 2))))
 
-(eval-after-load 'rjsx-mode
-  '(add-hook 'rjsx-mode-hook
-             (lambda()
-               (add-hook 'before-save-hook 'web-mode-buffer-indent t t))))
+(eval-after-load 'web-mode
+  '(add-hook 'web-mode-hook
+             (lambda ()
+               (if (string-match-p "eex" (file-name-extension buffer-file-name))
+                   (setq web-mode-code-indent-offset 4)
+                 (setq web-mode-code-indent-offset 2)))))
 
 (setq auth-sources '("~/.authinfo.gpg"))
-;; (with-eval-after-load 'forge
-;;  (setq forge-topic-list-columns
-;;      '(("#" 5 t (:right-align t) number nil)
-;;        nil
-;;        ("Title" 60 t nil title  nil)
-;;        ("State" 6 t nil state nil)
-        ;; ("Marks" 8 t nil marks nil)
-        ;; ("Labels" 8 t nil labels nil)
-        ;; ("Assignees" 10 t nil assignees nil)
-;;        ("Updated" 10 t nill updated nil)))
-;; )
-
-(with-eval-after-load 'forge
-  (setq forge-topic-list-columns
-    ;; '(("#" 5 forge-topic-list-sort-by-number (:right-align t) number nil)
-      '(("#" 15 
-        (lambda (a b) 
-          (string> (read (aref (cadr a) 0))
-            (read (aref (cadr b) 0))))
-        (:right-align t) state nil)
-        ("id" 6 t nil number nil)
-        ("Title" 100 t nil title)
-        ("Milestone" 9 t nil milestone nil)
-        ("Updated" 10 t nill updated nil))))
-
-(add-hook 'elixir-mode-hook
-          (lambda ()
-            (add-hook 'before-save-hook 'elixir-format nil t)))
 
 ;; OPTIONAL: If you prefer to grab symbols rather than words, use
 ;; `evil-multiedit-match-symbol-and-next` (or prev).
@@ -162,23 +120,15 @@
 
 (load! "joseph-single-dired")
 
-(setq exec-path (append exec-path '("/Users/matsa/Code/elixir/elixir-ls/release")))
-
 (when (or window-system (daemonp))
   (setq default-frame-alist '(
-                              (width . 210)
-                              (height . 50)
-                              (top . 250)
-                              (left . 300)
+                              (width . 120)
+                              (height . 40)
+                              (top . 0)
+                              (left . 0)
  ))
 )
 
-(setq display-line-numbers-type nil)
-
-;; config rust
-(after! rustic
-  (setq lsp-rust-server 'rust-analyzer)
-  (setq rustic-format-on-save t))
 
 (after! org
   (setq org-todo-keywords
@@ -188,3 +138,37 @@
   :bind
   (:map evil-normal-state-map
    ("t" . org-todo)))
+
+;;
+;; custom env file
+;;
+(doom-load-envvars-file "~/.doom.d/custom_env")
+
+;;
+;; Elixir config
+;;
+(setq exec-path (append exec-path '("~/Code/elixir/elixir-ls/release")))
+
+(add-hook 'elixir-mode-hook
+          (lambda ()
+            (add-hook 'before-save-hook 'elixir-format nil t)))
+
+
+;;
+;; Gerkhin major mode
+;;
+(use-package! feature-mode
+  :init
+  (setq feature-default-language "en")
+  (add-to-list 'auto-mode-alist '("\\.feature\\'" . feature-mode)))
+
+;; change color of string more than 120 characters
+(require 'whitespace)
+(setq whitespace-line-column 120) ;; limit line length
+(setq whitespace-style '(face lines-tail))
+
+(add-hook 'prog-mode-hook 'whitespace-mode)
+
+(global-whitespace-mode +1)
+
+(setq ispell-dictionary "en")
