@@ -50,7 +50,7 @@
 ;(unpin! t)
 
 (package! web-mode
-  :recipe (:host github :repo "Matsa59/web-mode"))
+  :recipe (:host github :repo "Matsa59/web-mode" :branch "develop"))
 
 (package! ag)
 (package! ripgrep)
@@ -59,3 +59,5 @@
 (package! evil-multiedit)
 (package! prettier-js)
 (package! feature-mode)
+(package! exec-path-from-shell)
+(package! dap-mode)

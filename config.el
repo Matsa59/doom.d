@@ -53,6 +53,8 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
+(exec-path-from-shell-initialize)
+
 ;; projectile configuration
 (setq projectile-project-search-path '("~/Code/drakkar"))
 
@@ -76,11 +78,10 @@
   (add-to-list 'auto-mode-alist '("\\.html\\.leex\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode)))
 
-(eval-after-load 'web-mode
-  '(add-hook 'web-mode-hook
-             (lambda ()
-               (add-hook 'before-save-hook 'web-mode-buffer-indent t t)
-               (setq js-indent-level 2))))
+;; (eval-after-load 'web-mode
+;;   '(add-hook 'web-mode-hook
+;;              (lambda ()
+;;                (add-hook 'before-save-hook 'web-mode-buffer-indent t t))))
 
 (eval-after-load 'web-mode
   '(add-hook 'web-mode-hook
@@ -88,6 +89,13 @@
                (if (string-match-p "eex" (file-name-extension buffer-file-name))
                    (setq web-mode-code-indent-offset 4)
                  (setq web-mode-code-indent-offset 2)))))
+
+(defun format-eex ()
+  "Format eex buffer using eexbeautifier."
+  (when (and (eq major-mode 'web-mode) (string-match-p "eex" (file-name-extension buffer-file-name)))
+    (shell-command-to-string (format "eexbeautifier %s" buffer-file-name))))
+
+(add-hook 'after-save-hook #'format-eex)
 
 (setq auth-sources '("~/.authinfo.gpg"))
 
@@ -116,9 +124,6 @@
    ("C-p" . evil-multiedit-prev)))
 
 
-(load! "bindings")
-
-(load! "joseph-single-dired")
 
 (when (or window-system (daemonp))
   (setq default-frame-alist '(
@@ -129,7 +134,9 @@
  ))
 )
 
-
+;;
+;; org-mode
+;;
 (after! org
   (setq org-todo-keywords
         '((sequence "TODO(t)" "IN-PROGRESS(i)" "DONE(d)"))))
@@ -140,11 +147,6 @@
    ("t" . org-todo)))
 
 ;;
-;; custom env file
-;;
-;; (doom-load-envvars-file "~/.doom.d/custom_env")
-
-;;
 ;; Elixir config
 ;;
 (setq exec-path (append exec-path '("~/Code/elixir/elixir-ls/release")))
@@ -152,7 +154,6 @@
 (add-hook 'elixir-mode-hook
           (lambda ()
             (add-hook 'before-save-hook 'elixir-format nil t)))
-
 
 ;;
 ;; Gerkhin major mode
@@ -172,3 +173,19 @@
 (global-whitespace-mode +1)
 
 (setq ispell-dictionary "en")
+
+;;
+;; Cucstom loads
+;;
+
+(load! "bindings")
+(load! "joseph-single-dired")
+
+;;
+;; Dap mode
+;;
+(load! "elixir-dap")
+(require 'dap-elixir-custom)
+
+(dap-ui-mode)
+(dap-mode)
