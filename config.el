@@ -78,11 +78,6 @@
   (add-to-list 'auto-mode-alist '("\\.html\\.leex\\'" . web-mode))
   (add-to-list 'auto-mode-alist '("\\.erb\\'" . web-mode)))
 
-;; (eval-after-load 'web-mode
-;;   '(add-hook 'web-mode-hook
-;;              (lambda ()
-;;                (add-hook 'before-save-hook 'web-mode-buffer-indent t t))))
-
 (eval-after-load 'web-mode
   '(add-hook 'web-mode-hook
              (lambda ()
@@ -97,6 +92,7 @@
 
 (add-hook 'after-save-hook #'format-eex)
 
+;; For magit-forge, uncomment the next line
 (setq auth-sources '("~/.authinfo.gpg"))
 
 ;; OPTIONAL: If you prefer to grab symbols rather than words, use
